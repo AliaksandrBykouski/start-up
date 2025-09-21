@@ -1,9 +1,20 @@
+import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const compat = new FlatCompat({
+	baseDirectory: __dirname,
+	recommendedConfig: js.configs.recommended
+})
 
 export default [
-	js.configs.recommended,
+	...compat.extends('next/core-web-vitals'),
 	{
 		ignores: [
 			'.next/**',
@@ -23,17 +34,24 @@ export default [
 		languageOptions: {
 			parser: tsParser,
 			parserOptions: {
-				project: './tsconfig.json'
+				project: './tsconfig.json',
+				ecmaVersion: 'latest',
+				sourceType: 'module'
 			},
 			globals: {
-				React: 'readonly' // Для React
+				React: 'readonly',
+				JSX: 'readonly'
 			}
 		},
 		plugins: {
 			'@typescript-eslint': ts
 		},
 		rules: {
-			// ваши правила
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{ argsIgnorePattern: '^_' }
+			],
+			'@typescript-eslint/no-explicit-any': 'warn'
 		}
 	},
 	{
@@ -52,26 +70,7 @@ export default [
 			}
 		},
 		rules: {
-			'no-undef': 'off' // Отключаем проверку неопределенных переменных для тестов
-		}
-	},
-	{
-		files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
-		languageOptions: {
-			globals: {
-				console: 'readonly',
-				process: 'readonly',
-				Buffer: 'readonly',
-				__dirname: 'readonly',
-				__filename: 'readonly',
-				global: 'readonly',
-				require: 'readonly',
-				module: 'readonly',
-				exports: 'readonly'
-			}
-		},
-		rules: {
-			'no-undef': 'off' // Отключаем проверку неопределенных переменных для CommonJS
+			'no-undef': 'off'
 		}
 	}
 ]
