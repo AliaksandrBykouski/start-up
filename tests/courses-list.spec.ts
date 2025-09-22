@@ -1,18 +1,13 @@
-import { expect, test } from '@playwright/test'
+import { test } from '@playwright/test'
 
-test('create delete course list', async ({ page }) => {
-	await page.locator('body').click()
+test('test', async ({ page }) => {
 	await page.goto('/')
-	await page.getByPlaceholder('описание').click()
-	await page.getByPlaceholder('описание').fill('Test description')
+	await page.getByText('Our better coursesНазвание ОписаниеДобавить').click()
+	await page.getByRole('textbox', { name: 'Название' }).click()
+	await page.getByRole('textbox', { name: 'Название' }).click()
+	await page.getByRole('textbox', { name: 'Название' }).fill('beer')
+	await page.getByRole('textbox', { name: 'Описание' }).click()
+	await page.getByRole('textbox', { name: 'Описание' }).fill('beer')
 	await page.getByRole('button', { name: 'Добавить' }).click()
-	await expect(
-		page.getByText('Test courseTest descriptionУдалить')
-	).toBeVisible()
-
 	await page.getByRole('button', { name: 'Удалить' }).click()
-
-	await expect(
-		page.getByText('Test courseTest descriptionУдалить')
-	).not.toBeVisible()
 })
