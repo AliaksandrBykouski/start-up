@@ -28,3 +28,16 @@ Sentry.init({
 		})
 	]
 })
+
+export async function onRequestError(
+	err: unknown,
+	request: Request,
+	context: any
+) {
+	// @ts-ignore
+	captureRequestError(err, request, {
+		statusCode: context.res?.statusCode,
+		user: context.user
+	})
+}
+export { register, onRequestError } from './src/instrumentation'
