@@ -10,6 +10,11 @@ import { dbClient } from '@/shared/lib/db'
 
 export const nextAuthConfig: AuthOptions = {
 	adapter: PrismaAdapter(dbClient),
+	pages: {
+		signIn: '/auth/sign-in',
+		newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out to enable the default new user page)
+		verifyRequest: '/auth/verify-request'
+	},
 	providers: compact([
 		EmailProvider({
 			server: {

@@ -81,7 +81,11 @@ export default [
 				SVGSVGElement: 'readonly',
 				Element: 'readonly',
 				Document: 'readonly',
-				Window: 'readonly'
+				Window: 'readonly',
+				window: 'readonly',
+				document: 'readonly',
+				URL: 'readonly',
+				URLSearchParams: 'readonly'
 			}
 		},
 		plugins: {
