@@ -1,46 +1,87 @@
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
-import path from 'path'
-import { fileURLToPath } from 'url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-	recommendedConfig: js.configs.recommended
-})
 
 export default [
-	...compat.extends('next/core-web-vitals'),
+	// Global ignores - these will be ignored everywhere
 	{
 		ignores: [
-			'.next/**',
-			'node_modules/**',
-			'*.config.js',
-			'*.config.mjs',
-			'*.config.ts',
-			'*.config.cjs',
-			'coverage/**',
-			'dist/**',
-			'build/**',
-			'out/**'
+			'**/node_modules/**',
+			'**/.next/**',
+			'**/dist/**',
+			'**/build/**',
+			'**/out/**',
+			'**/coverage/**',
+			'**/.git/**',
+			'**/.vscode/**',
+			'**/.idea/**',
+			'**/tmp/**',
+			'**/temp/**',
+			'**/*.log',
+			'**/.env*',
+			'**/package-lock.json',
+			'**/yarn.lock',
+			'**/pnpm-lock.yaml',
+			'**/*.config.js',
+			'**/*.config.mjs',
+			'**/*.config.cjs',
+			'**/tailwind.config.js',
+			'**/postcss.config.mjs',
+			'**/next.config.ts',
+			'**/jest.config.ts',
+			'**/playwright.config.ts',
+			'**/instrumentation*.config.ts',
+			'**/prisma/migrations/**',
+			'**/public/**'
 		]
 	},
+
+	// Base JavaScript configuration
+	js.configs.recommended,
+
+	// TypeScript and React files configuration
 	{
-		files: ['**/*.ts', '**/*.tsx'],
+		files: ['src/**/*.{js,jsx,ts,tsx}'],
 		languageOptions: {
 			parser: tsParser,
 			parserOptions: {
-				project: './tsconfig.json',
 				ecmaVersion: 'latest',
-				sourceType: 'module'
+				sourceType: 'module',
+				ecmaFeatures: {
+					jsx: true
+				}
 			},
 			globals: {
 				React: 'readonly',
-				JSX: 'readonly'
+				JSX: 'readonly',
+				console: 'readonly',
+				process: 'readonly',
+				Buffer: 'readonly',
+				__dirname: 'readonly',
+				__filename: 'readonly',
+				global: 'readonly',
+				module: 'readonly',
+				require: 'readonly',
+				exports: 'readonly',
+				// Browser APIs
+				fetch: 'readonly',
+				Request: 'readonly',
+				Response: 'readonly',
+				setTimeout: 'readonly',
+				clearTimeout: 'readonly',
+				setInterval: 'readonly',
+				clearInterval: 'readonly',
+				// DOM types
+				HTMLElement: 'readonly',
+				HTMLDivElement: 'readonly',
+				HTMLInputElement: 'readonly',
+				HTMLTextAreaElement: 'readonly',
+				HTMLParagraphElement: 'readonly',
+				HTMLSpanElement: 'readonly',
+				SVGSVGElement: 'readonly',
+				Element: 'readonly',
+				Document: 'readonly',
+				Window: 'readonly'
 			}
 		},
 		plugins: {
@@ -51,11 +92,15 @@ export default [
 				'error',
 				{ argsIgnorePattern: '^_' }
 			],
-			'@typescript-eslint/no-explicit-any': 'warn'
+			'@typescript-eslint/no-explicit-any': 'warn',
+			'no-unused-vars': 'off',
+			'no-undef': 'error'
 		}
 	},
+
+	// Test files configuration
 	{
-		files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.test.ts', '**/*.test.tsx'],
+		files: ['src/**/*.{spec,test}.{ts,tsx}', 'tests/**/*.{spec,test}.{ts,tsx}'],
 		languageOptions: {
 			globals: {
 				describe: 'readonly',
